@@ -12,6 +12,9 @@ typedef struct{
     int sum;
 }ResultPair;
 
+ResultPair mssDivConq(std::vector<int> array);
+ResultPair mssDivConq(std::vector<int> array, int & start, int & end);
+ResultPair mssEnum(std::vector<int> array, int length);
 int runAlgorithms(string fileName);
 void printVector(std::vector<int> vec, int vecLength, std::ofstream & outfile);
 ResultPair mssLinear(std::vector<int> array, int length);
@@ -117,6 +120,15 @@ int runAlgorithms(string fileName){
 
         //**************************Algorithm 1 Run Area************************
 
+		output << "Algorithm 1 Problem " << problemNumber << endl;
+		clock_t alg1_begin = clock();
+		ResultPair alg1Results = mssEnum(problem, problemLength);
+		clock_t alg1_end = clock();
+		float alg1_elapsed = (float)(alg1_end - alg1_begin) / CLOCKS_PER_SEC;
+		printVector(alg1Results.array, alg1Results.array.size(), output);
+		output << "MSS Sum: " << alg1Results.sum << endl
+			<< "MSS Time: " << fixed << setprecision(10) << alg1_elapsed << endl << endl;
+
         //**************************Algorithm 1 Run Area************************
 
 
@@ -132,6 +144,15 @@ int runAlgorithms(string fileName){
 
 
         //**************************Algorithm 3 Run Area************************
+
+		output << "Algorithm 1 Problem " << problemNumber << endl;
+		clock_t alg3_begin = clock();
+		ResultPair alg3Results = mssDivConq(problem);
+		clock_t alg3_end = clock();
+		float alg3_elapsed = (float)(alg3_end - alg3_begin) / CLOCKS_PER_SEC;
+		printVector(alg3Results.array, alg3Results.array.size(), output);
+		output << "MSS Sum: " << alg3Results.sum << endl
+			<< "MSS Time: " << fixed << setprecision(10) << alg3_elapsed << endl << endl;
 
         //**************************Algorithm 3 Run Area************************
 
@@ -223,6 +244,121 @@ int subarraysum (int * array, int start, int end)
 	}
 	return sum;
 }
+
+//Algorithm 1 Enumeration
+ResultPair mssEnum(std::vector<int> array, int length){
+
+	int currMax;
+	int end = 0;
+	int start = 0;
+	ResultPair result;
+	result.sum = array[0];
+
+	//Search the array for every possible sized sub array
+	for (int subSize = 1; subSize <= length; subSize++){
+
+		for (int i = 0; i < length; i += 1){
+
+			currMax = 0;
+
+			//Only calculate if the subarray is within bounds
+			if (i + subSize <= length){
+
+				//Calculate the size of the current subarray
+				for (int j = 0; j < subSize; j++){
+
+					currMax += array[i + j];
+				}
+
+				if (currMax > result.sum){
+
+					result.sum = currMax;
+					start = i;
+					end = i + subSize - 1;
+				}
+			}
+		}
+	}
+
+	//Populate result pair array
+	for (int i = start; i <= end; i++)
+		result.array.push_back(array[i]);
+
+	return result;
+
+}
+
+//Algorithm 3 divide and conquer
+ResultPair mssDivConq(std::vector<int> array){
+
+	int low = 0;
+	int high = array.size();
+
+	return mssDivConq(array, low, high);
+}
+
+ResultPair mssDivConq(std::vector<int> array, int & start, int & end){
+
+	int interStart = 0;			//Start of intermediate subarray
+	int interEnd = 0;			//End of intermeduiate subarray
+	int localStart, localEnd;
+	int maxSum;
+	int currMax;
+	ResultPair result;
+
+	if (start == end){
+
+		result.sum = array[start];
+		result.array.push_back(array[start]);
+	}
+	else{
+
+		int splitPoint = (end + start) / 2;
+
+		//Generate the split points for the two subarray halves
+		int firstStart = start;
+		int firstEnd = splitPoint;
+		int secondStart = splitPoint + 1;
+		int secondEnd = end;
+
+		ResultPair maxFirst = mssDivConq(array, firstStart, firstEnd);
+		ResultPair maxSecond = mssDivConq(array, secondStart, secondEnd);
+
+		localStart = firstStart;
+		localEnd = firstEnd;
+		maxSum = array[localStart];
+		currMax = array[localStart];
+
+		//Check for a maximum intermediate subarray using Kadane's algorithm
+		for (int i = firstStart + 1; i <= secondEnd; i++){
+			localEnd = i;
+			if (currMax > 0){
+				currMax = currMax + array[i];
+			}
+			else{
+				localStart = i;
+				currMax = array[i];
+			}
+
+			if (currMax > maxSum){
+				maxSum = currMax;
+				interStart = localStart;
+				interEnd = localEnd;
+			}
+		}
+
+		for (int i = interStart; i <= interEnd; i++)
+			result.array.push_back(array[i]);
+
+		result.sum = maxSum;
+		start = interStart;
+		end = interEnd;
+
+	}
+
+	return result;
+}
+
 
 //Algorithm 4 Linear
 ResultPair mssLinear(std::vector<int> array, int length){
