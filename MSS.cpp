@@ -220,6 +220,7 @@ ResultPair basicenum(int * array, int length)
     ResultPair results;
     results.array = aresults;
     results.sum = max[0];
+    return results;
 }
 
 //Algorithm 2 BetterEnum
@@ -263,6 +264,7 @@ ResultPair BetterEnum(int * array, int length)
     ResultPair results;
     results.array = aresults;
     results.sum = max[0];
+    return results;
 }
 
 int subarraysum (int * array, int start, int end)
