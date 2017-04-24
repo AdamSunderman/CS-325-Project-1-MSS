@@ -20,6 +20,7 @@ void printVector(std::vector<int> vec, int vecLength, std::ofstream & outfile);
 ResultPair mssLinear(std::vector<int> array, int length);
 ResultPair BetterEnum(int * array, int length);
 int subarraysum (int * array, int start, int end);
+ResultPair basicenum(int * array, int length);
 
 int main(){
 
@@ -119,15 +120,13 @@ int runAlgorithms(string fileName){
         **/
 
         //**************************Algorithm 1 Run Area************************
-
-		output << "Algorithm 1 Problem " << problemNumber << endl;
-		clock_t alg1_begin = clock();
-		ResultPair alg1Results = mssEnum(problem, problemLength);
-		clock_t alg1_end = clock();
-		float alg1_elapsed = (float)(alg1_end - alg1_begin) / CLOCKS_PER_SEC;
-		printVector(alg1Results.array, alg1Results.array.size(), output);
-		output << "MSS Sum: " << alg1Results.sum << endl
-			<< "MSS Time: " << fixed << setprecision(10) << alg1_elapsed << endl << endl;
+  	output << "Algorithm 1 Problem " << problemNumber << endl;
+        clock_t timeStart = clock();
+        Resultpair alg1Results = basicenum(problem, problemLength);
+        float alg1_elapsed = (float)(clock() - timeStart) / CLOCKS_PER_SEC);
+        printVector(alg1Results.array, alg1Results.array.size(), output);
+        output << "MSS Sum: " << alg1Results.sum << endl
+               << "MSS Time: " << fixed << setprecision(10) << alg1_elapsed << endl << endl;
 
         //**************************Algorithm 1 Run Area************************
 
@@ -195,9 +194,6 @@ void printVector(std::vector<int> vec, int vecLength, std::ofstream & outfile){
 //basic enum
 ResultPair basicenum(int * array, int length)
 {
-     int * array = new int[length];
-     for (int i = 0; i < length; i++)
-	array[i] = rand() % 100;
      int max[3] = { array[0], 0, 0 };
      int temp = 0;
      for (int i = 0; i < length; i++)
