@@ -192,6 +192,40 @@ void printVector(std::vector<int> vec, int vecLength, std::ofstream & outfile){
      }
 }
 
+//basic enum
+ResultPair basicenum(int * array, int length)
+{
+     int * array = new int[length];
+     for (int i = 0; i < length; i++)
+	array[i] = rand() % 100;
+     int max[3] = { array[0], 0, 0 };
+     int temp = 0;
+     for (int i = 0; i < length; i++)
+     {
+	for (int j = i + 1; j < length; j++)
+	{
+	     temp = subarraysum(array, i, j);
+	     if (max[0] < temp)
+	     {
+		max[0] = temp;
+		max[1] = i;
+		max[2] = j;
+	     }
+          }
+     }
+	int Nlength = max[2] - max[1] + 1;
+
+	int * aresults = new int[Nlength];
+
+	for (int i = max[1], y = 0; i < max[2] && y < Nlength; i++, y++)
+	{
+		aresults[y] = array[i];
+	}
+    ResultPair results;
+    results.array = aresults;
+    results.sum = max[0];
+}
+
 //Algorithm 2 BetterEnum
 ResultPair BetterEnum(int * array, int length)
 {
