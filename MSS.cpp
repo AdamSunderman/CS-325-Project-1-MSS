@@ -324,10 +324,11 @@ ResultPair mssDivConq(std::vector<int> array, int & start, int & end){
 		ResultPair maxFirst = mssDivConq(array, firstStart, firstEnd);
 		ResultPair maxSecond = mssDivConq(array, secondStart, secondEnd);
 
+		interStart = firstStart;
+		interEnd = firstEnd;
 		localStart = firstStart;
-		localEnd = firstEnd;
-		maxSum = array[localStart];
-		currMax = array[localStart];
+		maxSum = array[firstStart];
+		currMax = array[firstStart];
 
 		//Check for a maximum intermediate subarray using Kadane's algorithm
 		for (int i = firstStart + 1; i <= secondEnd; i++){
