@@ -292,7 +292,7 @@ ResultPair mssEnum(std::vector<int> array, int length){
 ResultPair mssDivConq(std::vector<int> array){
 
 	int low = 0;
-	int high = array.size();
+	int high = array.size()-1;
 
 	return mssDivConq(array, low, high);
 }
